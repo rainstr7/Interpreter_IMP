@@ -7,4 +7,9 @@ abstract public class Operator {
     }
 
     abstract public void exec(Interpreter inte);
+
+    @Override
+    public String toString() {
+        return getClass().getName().toUpperCase() + " " + code;
+    }
 }

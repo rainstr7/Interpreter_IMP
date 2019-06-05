@@ -3,9 +3,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Interpreter {
-    TreeMap<Integer, Operator> code = new TreeMap<Integer, Operator>(); //code - хранит программу TreeMap отображение
-    Map<String, Double> vars = new HashMap<String, Double>();
-    Integer curLine;
+    private TreeMap<Integer, Operator> code = new TreeMap<Integer, Operator>(); //code - хранит программу TreeMap отображение
+    private Map<String, Double> vars = new HashMap<String, Double>(); // ?? использовал HashMap для хранения переменной, а для хранения программы использовал TreeMap (в TreeMap дубликаты не храняться)
+    private Integer curLine;
 
     //переход на следующую строку
     public void next(){
@@ -18,11 +18,11 @@ public class Interpreter {
     }
 
     public void run(){
-        curLine = code.firstKey();
+        curLine = code.firstKey(); // возвращает первый ключ
         while(true) {
-            Operator operator = code.get(curLine);
-            operator.exec(this);
-            if (curLine == null) break;
+            Operator operator = code.get(curLine); //вытаскиваем оператор
+            operator.exec(this); // вызываем exec-у этого оператора
+            if (curLine == null) break; // если строки кончились то выходим
         }
     }
 
@@ -39,11 +39,16 @@ public class Interpreter {
             }
             return;
         }
-        String parts[] = line.split(" ");
-        int lineNumber = Integer.parseInt(parts[0]);
-        String opName = parts[1];
-        Operator operator = OperatorFactury.createOperator(opName, line.substring(parts[0].length() + parts[1].length()) + 2);
-        code.put(lineNumber, operator);
+        try {
+            String parts[] = line.split(" ");
+            int lineNumber = Integer.parseInt(parts[0]);
+            String opName = parts[1];
+            Operator operator = OperatorFactury.createOperator(opName, line.substring(parts[0].length() + parts[1].length()) + 2); // взял длину первого кусочка, потом взял длину второго кусочка, сложил, прибавил размер двух пробелов и отрезал все оставшееся (все после названия оператора)
+            code.put(lineNumber, operator);
+        } catch (RuntimeException e) {
+            System.err.println("Wrong operation!");
+        }
+
     }
 
     public Map<String,Double> getVars(){

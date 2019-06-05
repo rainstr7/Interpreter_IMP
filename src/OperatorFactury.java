@@ -7,6 +7,9 @@ public class OperatorFactury {
 
     static {
         ops.put("PRINT", Print.class);
+        ops.put("LET", Let.class);
+        ops.put("IF", If.class);
+        ops.put("GOTO", GoTo.class);
     }
 
     public static Operator createOperator(String opName, String substring) {
